@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: E2147dev
 subtitle: ''
 description: ''
 keywords:
-author: John Doe
-language: en
+author: e2147
+language: zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://blog.e.002147.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -102,3 +102,10 @@ theme: landscape
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+# 在文件末尾或合适位置添加
+feed:
+  type: atom          # 生成 atom.xml，也可以设为 rss2 生成 rss2.xml[reference:7][reference:8]
+  path: atom.xml      # 生成的文件名[reference:9][reference:10]
+  limit: 20           # 输出的文章数量，设为 0 或 false 则输出全部[reference:11][reference:12]
+  content: true       # true 表示在订阅源中包含全文[reference:13]
