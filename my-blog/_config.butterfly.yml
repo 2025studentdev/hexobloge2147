@@ -46,6 +46,7 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
+    fas fa-rss: /atom.xml || RSS || '#ff6600'
 # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
 # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
 
@@ -53,17 +54,17 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/favicon.png
+favicon: /img/icon.webp
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: /img/icon.webp
   effect: false
 
 # Disable all banner images
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img:
+default_top_img: /img/jpg10.jpg
 
 # The banner image of index page
 index_img:
@@ -89,7 +90,6 @@ category_per_img:
 
 # The background image of footer
 footer_img: false
-
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
@@ -289,7 +289,7 @@ aside:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/2025studentdev
   card_announcement:
     enable: true
     content: This is my Blog
