@@ -1,45 +1,38 @@
-# 这个文件告诉 GitHub 什么时候干活，以及怎么干
-name: Deploy Hexo Blog  # 这只是个名字，随便叫
+name: Deploy Hexo Blog
 
-# 触发条件：只要你把代码推送到仓库的 "main" 分支，它就自动执行
 on:
   push:
     branches:
-      - main  # 如果你的默认分支是 "master"，请把 main 改成 master
+      - master   # 你的默认分支是 master
 
 jobs:
-  # 第一个任务：打包构建
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1. 把你仓库里的代码下载到 GitHub 的临时服务器上
       - uses: actions/checkout@v4
 
-      # 2. 安装 Node.js (因为 Hexo 需要它)
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: npm
+          cache-dependency-path: my-blog/package-lock.json
 
-      # 3. 进入你的 my-blog 文件夹，安装依赖包 (npm install)
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
-        working-directory: ./my-blog  # 【重点】这行告诉电脑：先进 my-blog 再执行命令
-
-      # 4. 进入 my-blog，执行生成静态网页的命令 (hexo generate)
-      - name: Build Hexo
-        run: npm run build  # 注意：这默认执行 hexo generate，前提是你 package.json 里有 "build" 脚本，如果没有，直接写 run: npx hexo generate 也行
         working-directory: ./my-blog
 
-      # 5. 把生成好的网页文件（在 my-blog/public 里）打包上传，留给下一步部署
+      - name: Build Hexo
+        run: npx hexo generate   # 直接用 npx，不依赖 package.json 里的 scripts
+        working-directory: ./my-blog
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./my-blog/public  # 【重点】必须指向 my-blog 里的 public 文件夹
+          path: ./my-blog/public
 
-  # 第二个任务：部署到互联网
   deploy:
-    needs: build  # 等上面 build 任务成功后再执行
+    needs: build
     permissions:
       pages: write
       id-token: write
