@@ -54,10 +54,10 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/icon.webp
+favicon: /img/
 
 avatar:
-  img: /img/icon.webp
+  img: /img/1.jpg
   effect: false
 
 # Disable all banner images
