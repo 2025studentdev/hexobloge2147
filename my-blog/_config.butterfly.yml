@@ -149,12 +149,25 @@ index_top_img_height:
 
 # The subtitle on homepage
 subtitle:
-  enable: false
+  enable: true
   # Typewriter Effect
   effect: true
   # Customize typed.js
   # https://github.com/mattboldt/typed.js/#customization
   typed_option:
+
+
+    # 打字开始前的延迟 (毫秒)
+    startDelay: 300
+    # 打字速度 (毫秒)
+    typeSpeed: 150
+    # 回退速度 (毫秒)
+    backSpeed: 50
+    # 4. 是否循环打字
+    loop: true
+
+
+
   # Source - Call the third-party service API (Chinese only)
   # It will show the source first, then show the content of sub
   # Choose: false/1/2/3
@@ -165,6 +178,14 @@ subtitle:
   source: false
   # If you close the typewriter effect, the subtitle will only show the first line of sub
   sub:
+    - 学最好的别人，做最好的自己
+    - 生活原本沉闷，但跑起来就有风。
+    - 请成为永远疯狂永远浪漫永远清澈的存在。
+    - 那……能陪我组一辈子的乐队吗？
+    - 万物皆有裂痕，那是光照进来的地方。
+    - 真正的自由，是拥有说“不”的底气，也有说“好”的从容。
+    - 我本可以忍受黑暗，如果我不曾见过太阳。
+    - 所有失去的，都会以另一种方式归来。
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
