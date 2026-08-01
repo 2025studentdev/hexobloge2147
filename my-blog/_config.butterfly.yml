@@ -319,7 +319,7 @@ aside:
       link: https://github.com/2025studentdev
   card_announcement:
     enable: true
-    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a>'
+    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a> <br><br><a href="/create">发现不一样</a>'
   card_recent_post:
     enable: true
     # If set 0 will show all
