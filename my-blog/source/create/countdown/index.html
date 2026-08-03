@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>高考倒计时</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#000;color:#fff;font-family:system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+        body::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+        h1{font-size:clamp(1.2rem,4vw,2rem);font-weight:200;letter-spacing:.5em;margin-bottom:clamp(30px,8vh,80px);z-index:1;text-indent:.5em}
+        .c{display:flex;gap:clamp(8px,2.5vw,30px);align-items:center;z-index:1}
+        .b{display:flex;flex-direction:column;align-items:center}
+        .b span{font-family:'Courier New',monospace;font-size:clamp(2.2rem,11vw,8rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+        .b p{margin-top:clamp(6px,1.5vh,16px);font-size:clamp(.5rem,1.5vw,.8rem);letter-spacing:.2em;color:#666;text-transform:uppercase}
+        i{font-style:normal;font-size:clamp(1.5rem,7vw,5rem);font-weight:100;color:#333;line-height:1}
+    </style></head><body>
+<h1>高考倒计时</h1>
+<div class="c">
+    <div class="b"><span id="d">000</span><p>Days</p></div><i>:</i>
+    <div class="b"><span id="h">00</span><p>Hours</p></div><i>:</i>
+    <div class="b"><span id="m">00</span><p>Minutes</p></div><i>:</i>
+    <div class="b"><span id="s">00</span><p>Seconds</p></div>
+</div>
+<script>
+    const T=new Date('2029-06-07T09:00:00+08:00').getTime(),d=document.getElementById('d'),h=document.getElementById('h'),m=document.getElementById('m'),s=document.getElementById('s');
+    function u(){let n=Date.now(),x=T-n;if(x<=0){d.textContent='000';h.textContent='00';m.textContent='00';s.textContent='00';return}d.textContent=String(Math.floor(x/864e5)).padStart(3,'0');h.textContent=String(Math.floor(x%864e5/36e5)).padStart(2,'0');m.textContent=String(Math.floor(x%36e5/6e4)).padStart(2,'0');s.textContent=String(Math.floor(x%6e4/1e3)).padStart(2,'0')}
+    setInterval(u,1000);u();
+</script></body></html>

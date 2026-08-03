@@ -70,7 +70,7 @@ avatar:
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img: /img/2.jpg
+default_top_img: /img/5.jpg
 
 # The banner image of index page
 index_img:
@@ -95,7 +95,7 @@ category_img:
 category_per_img:
 
 # The background image of footer
-footer_img:
+footer_img: '#1fcccd'
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
@@ -166,7 +166,7 @@ subtitle:
     # 打字开始前的延迟 (毫秒)
     startDelay: 300
     # 打字速度 (毫秒)
-    typeSpeed: 150
+    typeSpeed: 180
     # 回退速度 (毫秒)
     backSpeed: 50
     # 4. 是否循环打字
@@ -187,11 +187,8 @@ subtitle:
     - 学最好的别人，做最好的自己
     - 生活原本沉闷，但跑起来就有风。
     - 请成为永远疯狂永远浪漫永远清澈的存在。
-    - 那……能陪我组一辈子的乐队吗？
     - 万物皆有裂痕，那是光照进来的地方。
-    - 真正的自由，是拥有说“不”的底气，也有说“好”的从容。
-    - 我本可以忍受黑暗，如果我不曾见过太阳。
-    - 所有失去的，都会以另一种方式归来。
+
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -319,7 +316,7 @@ aside:
       link: https://github.com/2025studentdev
   card_announcement:
     enable: true
-    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a> <br><br><a href="/create">发现不一样</a>'
+    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a> <br><br><a href="/create/countdown">高考倒计时</a>'
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -379,7 +376,7 @@ aside:
     # Time difference between publish date and now
     # Formal: Month/Day/Year Time or Year/Month/Day Time
     # Leave it empty if you don't enable this feature
-    runtime_date:
+    runtime_date: 06/17/2026 00:00:00
 
 # --------------------------------------
 # Bottom right button
