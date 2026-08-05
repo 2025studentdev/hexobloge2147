@@ -1,10 +1,8 @@
 // scripts/build-time.js
 process.env.TZ = 'Asia/Shanghai';
-hexo.extend.filter.register('after_generate', function () {
-    const fs = require('fs');
-    const path = require('path');
+
+hexo.extend.filter.register('after_render:html', function (html, data) {
     const now = new Date();
-    // 格式：2026年08月05日 13:21:40
     const pad = n => String(n).padStart(2, '0');
     const Y = now.getFullYear();
     const M = pad(now.getMonth() + 1);
@@ -13,11 +11,12 @@ hexo.extend.filter.register('after_generate', function () {
     const m = pad(now.getMinutes());
     const s = pad(now.getSeconds());
     const timeStr = `${Y}年${M}月${D}日 ${h}:${m}:${s}`;
-    const jsContent = `window.BUILD_TIME = '${timeStr}';`;
-    const filePath = path.join(hexo.public_dir, 'js', 'build-time.js');
-    // 确保目录存在
-    if (!fs.existsSync(path.dirname(filePath))) {
-        fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    }
-    fs.writeFileSync(filePath, jsContent);
+
+    const buildHtml = `<span style="display:block;text-align:center;font-size:0.85rem;opacity:0.7;margin-top:6px;">构建时间：${timeStr}</span>`;
+
+    // 在 </body> 前插入，直接放到 .footer-other 里面
+    return html.replace(
+        /(<div class="footer-other">[\s\S]*?)(?=<\/div>)/,
+        (match, group) => group + buildHtml
+    );
 });
