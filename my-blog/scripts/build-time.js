@@ -1,4 +1,5 @@
 // scripts/build-time.js
+process.env.TZ = 'Asia/Shanghai';
 hexo.extend.filter.register('after_generate', function () {
     const fs = require('fs');
     const path = require('path');
