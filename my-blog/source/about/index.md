@@ -6,6 +6,15 @@ date: 2026-08-01 15:00:00
 
 在这里我会分享一些知识，有时候也会记录生活
 
+
+E2147dev：一个 ID 背后的含义
+
+E = Electronic
+
+2147 = 2^31 − 1
+
+dev = Developer
+
 002147.xyz主要放一些AI生成的作品
 
 i.101229.xyz主要是写文章记录生活
@@ -47,3 +56,30 @@ e2147dev@proton.me
   <span class="badge-left">e2147</span>
   <span class="badge-right">dev</span>
 </div>
+
+
+
+<!-- 霓虹灯文本：e2147dev -->
+<style>
+.neon-sign {
+  display: inline-block;
+  font-size: 3rem;           /* 调整大小 */
+  font-weight: 700;
+  font-family: 'Arial', sans-serif;
+  color: #ffffff;
+  text-shadow:
+    0 0 7px #1fcccd,
+    0 0 10px #1fcccd,
+    0 0 21px #1fcccd,
+    0 0 42px #0aa0a5,
+    0 0 82px #0aa0a5;
+  animation: breathe 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes breathe {
+  0%   { text-shadow: 0 0 7px #1fcccd, 0 0 10px #1fcccd, 0 0 21px #1fcccd, 0 0 42px #0aa0a5, 0 0 82px #0aa0a5; opacity: 0.9; }
+  100% { text-shadow: 0 0 10px #1fcccd, 0 0 20px #1fcccd, 0 0 40px #1fcccd, 0 0 80px #0aa0a5, 0 0 120px #0aa0a5; opacity: 1; }
+}
+</style>
+
+<span class="neon-sign">e2147dev</span>
