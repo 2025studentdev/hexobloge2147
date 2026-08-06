@@ -530,7 +530,7 @@ math:
 search:
   # Choose: algolia_search / local_search / docsearch
   # leave it empty if you don't need search
-  use:
+  use: local_search
   placeholder:
 
   # Algolia Search
@@ -1191,3 +1191,12 @@ CDN:
   # valine:
   # waline_css:
   # waline_js:
+
+# Local Search
+local_search:
+  enable: true
+  preload: false        # 可选，设为 true 则页面加载时就拉取 search.xml
+  CDN:                   # 留空即可
+
+
+

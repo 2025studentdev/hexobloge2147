@@ -111,3 +111,15 @@ feed:
   path: atom.xml      # 生成的文件名[reference:9][reference:10]
   limit: 20           # 输出的文章数量，设为 0 或 false 则输出全部[reference:11][reference:12]
   content: true       # true 表示在订阅源中包含全文[reference:13]
+
+search:
+  path: search.xml
+  field: post
+  content: false
+
+
+
+# 找到类似这样的配置
+hexo_blog_encrypt:
+  kdf:
+    iterations: 600000  # 原来是 250000，改成这个
