@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日人品</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #FFFFFF;
+            color: #333333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1FCCCD;
+            margin-bottom: 32px;
+            letter-spacing: 2px;
+        }
+
+        .date-tag {
+            display: inline-block;
+            background-color: #1FCCCD;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 20px;
+            margin-bottom: 40px;
+        }
+
+        .score-display {
+            font-size: 96px;
+            font-weight: 800;
+            color: #1FCCCD;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .label {
+            font-size: 16px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="title">今 日 人 品</div>
+    <div class="date-tag" id="dateTag"></div>
+    <div class="score-display" id="score">--</div>
+    <div class="label">/ 100</div>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+
+        function getTodayString() {
+            var now = new Date();
+            var y = now.getFullYear();
+            var m = String(now.getMonth() + 1).padStart(2, '0');
+            var d = String(now.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + d;
+        }
+
+        function collectFingerprint() {
+            var parts = [];
+            parts.push(navigator.language || '');
+            parts.push(String(screen.width) + 'x' + String(screen.height));
+            parts.push(String(screen.colorDepth));
+            parts.push(String(new Date().getTimezoneOffset()));
+            parts.push(String(navigator.hardwareConcurrency || ''));
+            parts.push(String(navigator.deviceMemory || ''));
+            parts.push(String(navigator.platform || ''));
+            parts.push(String(typeof window.TouchEvent !== 'undefined'));
+            return parts.join('|');
+        }
+
+        function fnv1aHash(str) {
+            var hash = 2166136261;
+            for (var i = 0; i < str.length; i++) {
+                hash ^= str.charCodeAt(i);
+                hash = Math.imul(hash, 16777619);
+            }
+            return hash >>> 0;
+        }
+
+        function detectPlatform(ua) {
+            return /iPhone|iPad|iPod|Macintosh/i.test(ua) ? 'apple' : 'other';
+        }
+
+        function init() {
+            var todayStr = getTodayString();
+            var ua = navigator.userAgent || '';
+            var fingerprint = collectFingerprint();
+            var platform = detectPlatform(ua);
+
+            var seed = todayStr + '::' + ua + '::' + fingerprint;
+            var hashValue = fnv1aHash(seed);
+
+            var min = platform === 'apple' ? 0 : 60;
+            var max = platform === 'apple' ? 59 : 100;
+            var score = min + (hashValue % (max - min + 1));
+
+            document.getElementById('dateTag').textContent = todayStr;
+            document.getElementById('score').textContent = score;
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+</script>
+</body>
+</html>

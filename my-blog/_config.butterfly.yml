@@ -318,16 +318,18 @@ aside:
     enable: true
     content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a> <br><br><a href="/create/countdown">高考倒计时</a> <br><br> 
 
+<a href="/create/luck">今日人品</a> <br><br>
+
 <a href="/create/music" class="music-player-btn">音乐播放器</a>
 <style>
 .music-player-btn {
   display: block;
-  width: 100%;
-  max-width: 260px;
+  width: auto;       /* 改为自适应宽度 */
+  max-width: 180px;  /* 从260px缩小到180px */
   margin: 0 auto;
-  padding: 14px 0;
+  padding: 10px 0;   /* 上下内边距从14px减到10px */
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;   /* 字号从16px减到14px */
   font-weight: 600;
   color: #1fcccd;
   background: transparent;
