@@ -458,7 +458,7 @@ copy:
 
 # Need to install the hexo-wordcount plugin
 wordcount:
-  enable: false
+  enable: true
   # Display the word count of the article in post meta
   post_wordcount: true
   # Display the time to read the article in post meta
@@ -1091,7 +1091,6 @@ inject:
   bottom:
     - |
       <style>
-        /* 让卡片容器与主题其他卡片外观一致 */
         #cc-card {
           padding: 0.6rem 1rem !important;
           background: var(--card-bg, #fff) !important;
@@ -1100,35 +1099,43 @@ inject:
           box-shadow: var(--card-box-shadow, 0 2px 4px rgba(0,0,0,0.05)) !important;
           margin-bottom: 1rem !important;
         }
+        /* 全部改为块级元素，各占一行 */
         #cc-card .cc-time {
+          display: block;
           font-size: 1.4rem;
           font-weight: 700;
           color: var(--font-color, #2c3e50);
           letter-spacing: 0.5px;
           line-height: 1.5;
+          margin-bottom: 0.1rem;  /* 时间与日期之间的间距 */
         }
         #cc-card .cc-date {
+          display: block;
           font-size: 0.7rem;
           color: var(--meta-color, #7f8c8d);
           line-height: 1.5;
+          margin-bottom: 0.4rem;  /* 日期与下一条的间距 */
         }
+        /* 元信息也分行，且不再使用 flex */
         #cc-card .cc-meta {
           font-size: 0.65rem;
           color: var(--meta-color, #95a5a6);
-          line-height: 1.6;
-          display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
+          line-height: 1.8;        /* 行高适当加大，让两行之间有透气感 */
         }
         #cc-card .cc-meta span {
-          margin-right: 6px;
+          display: block;          /* 每个span单独占一行 */
+          margin-bottom: 0.1rem;   /* 两条元信息之间的间距 */
+        }
+        #cc-card .cc-meta span:last-child {
+          margin-bottom: 0;        /* 最后一条不留间距 */
         }
       </style>
       <div id="cc-card" class="card-widget" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-          <span class="cc-time" id="ccTime">--:--</span>
-          <span class="cc-date" id="ccDate">----年--月--日 星期-</span>
-        </div>
+        <!-- 时间单独一行 -->
+        <span class="cc-time" id="ccTime">--:--</span>
+        <!-- 日期单独一行 -->
+        <span class="cc-date" id="ccDate">----年--月--日 星期-</span>
+        <!-- 倒计时和励志语各占一行 -->
         <div class="cc-meta">
           <span id="ccCountdown">距离周末还有 - 天</span>
           <span id="ccMotto">今天又是努力学习的一天</span>
@@ -1149,10 +1156,10 @@ inject:
             var d = now.getDate();
             var day = now.getDay();
             var wd = getWeekday(day);
-      
+
             document.getElementById('ccTime').textContent = h + ':' + m;
             document.getElementById('ccDate').textContent = y + '年' + mon + '月' + d + '日 星期' + wd;
-      
+
             var countdownText = '';
             if (day === 0 || day === 6) {
               countdownText = '放假了！';
@@ -1162,7 +1169,7 @@ inject:
             }
             document.getElementById('ccCountdown').textContent = countdownText;
           }
-      
+
           function moveCard() {
             var card = document.getElementById('cc-card');
             var ann = document.querySelector('.card-announcement');
@@ -1179,7 +1186,7 @@ inject:
               }
             }
           }
-      
+
           if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
               update();
@@ -1421,6 +1428,5 @@ local_search:
   enable: true
   preload: false        # 可选，设为 true 则页面加载时就拉取 search.xml
   CDN:                   # 留空即可
-
 
 
