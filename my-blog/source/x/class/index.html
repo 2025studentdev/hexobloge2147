@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程表</title>
+    <style>
+        :root {
+            --c-primary: #1FCCCD;
+            --c-black: #1a1a1a;
+            --c-white: #ffffff;
+            --c-gray: #e8e8e8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: var(--c-white);
+            color: var(--c-black);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .schedule {
+            width: 100%;
+            max-width: 960px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .schedule th,
+        .schedule td {
+            border: 1px solid var(--c-gray);
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 4px;
+            font-size: 15px;
+        }
+
+        .schedule thead th {
+            background: var(--c-primary);
+            color: var(--c-white);
+            font-weight: 600;
+            padding: 14px 4px;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .schedule thead th:first-child {
+            width: 100px;
+            background: #17a8a9;
+        }
+
+        .time-label {
+            background: #f7f7f7;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--c-black);
+            font-weight: 500;
+        }
+
+        .time-label span {
+            display: block;
+            font-size: 11px;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .section-row td {
+            background: #edfafa;
+            color: #0e8b8c;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            padding: 6px;
+        }
+
+        .subject {
+            font-weight: 600;
+            letter-spacing: 1px;
+            height: 50px;
+        }
+
+        @media print {
+            body { padding: 0; }
+            .schedule { max-width: none; }
+        }
+    </style>
+</head>
+<body>
+
+<table class="schedule">
+    <thead>
+    <tr>
+        <th>时间</th>
+        <th>周一</th>
+        <th>周二</th>
+        <th>周三</th>
+        <th>周四</th>
+        <th>周五</th>
+        <th>周六</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <!-- 上午 -->
+    <tr class="section-row"><td colspan="7">上 午</td></tr>
+
+    <tr>
+        <td class="time-label">第一节<span>07:30-08:15</span></td>
+        <td class="subject">语文</td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">物理</td>
+        <td class="subject">化学</td>
+        <td class="subject">语文</td>
+    </tr>
+    <tr>
+        <td class="time-label">第二节<span>08:25-09:10</span></td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">物理</td>
+        <td class="subject">化学</td>
+        <td class="subject">生物</td>
+        <td class="subject">数学</td>
+    </tr>
+    <tr>
+        <td class="time-label">第三节<span>09:20-10:05</span></td>
+        <td class="subject">英语</td>
+        <td class="subject">政治</td>
+        <td class="subject">历史</td>
+        <td class="subject">地理</td>
+        <td class="subject">语文</td>
+        <td class="subject">英语</td>
+    </tr>
+    <tr>
+        <td class="time-label">第四节<span>10:15-11:00</span></td>
+        <td class="subject">物理</td>
+        <td class="subject">化学</td>
+        <td class="subject">生物</td>
+        <td class="subject">政治</td>
+        <td class="subject">历史</td>
+        <td class="subject">地理</td>
+    </tr>
+
+    <!-- 下午 -->
+    <tr class="section-row"><td colspan="7">下 午</td></tr>
+
+    <tr>
+        <td class="time-label">第五节<span>14:00-14:45</span></td>
+        <td class="subject">化学</td>
+        <td class="subject">生物</td>
+        <td class="subject">地理</td>
+        <td class="subject">语文</td>
+        <td class="subject">数学</td>
+        <td class="subject">体育</td>
+    </tr>
+    <tr>
+        <td class="time-label">第六节<span>14:55-15:40</span></td>
+        <td class="subject">生物</td>
+        <td class="subject">地理</td>
+        <td class="subject">政治</td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">班会</td>
+    </tr>
+    <tr>
+        <td class="time-label">第七节<span>15:50-16:35</span></td>
+        <td class="subject">历史</td>
+        <td class="subject">语文</td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">物理</td>
+        <td class="subject"></td>
+    </tr>
+    <tr>
+        <td class="time-label">第八节<span>16:45-17:30</span></td>
+        <td class="subject">地理</td>
+        <td class="subject">物理</td>
+        <td class="subject">化学</td>
+        <td class="subject">历史</td>
+        <td class="subject">政治</td>
+        <td class="subject"></td>
+    </tr>
+
+    <!-- 晚自习 -->
+    <tr class="section-row"><td colspan="7">晚 自 习</td></tr>
+
+    <tr>
+        <td class="time-label">晚自习一<span>19:00-19:50</span></td>
+        <td class="subject">语文</td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">物理</td>
+        <td class="subject"></td>
+        <td class="subject"></td>
+    </tr>
+    <tr>
+        <td class="time-label">晚自习二<span>20:00-20:50</span></td>
+        <td class="subject">数学</td>
+        <td class="subject">英语</td>
+        <td class="subject">化学</td>
+        <td class="subject">生物</td>
+        <td class="subject"></td>
+        <td class="subject"></td>
+    </tr>
+    <tr>
+        <td class="time-label">晚自习三<span>21:00-21:50</span></td>
+        <td class="subject">英语</td>
+        <td class="subject">物理</td>
+        <td class="subject">地理</td>
+        <td class="subject">政治</td>
+        <td class="subject"></td>
+        <td class="subject"></td>
+    </tr>
+
+    </tbody>
+</table>
+
+</body>
+</html>
