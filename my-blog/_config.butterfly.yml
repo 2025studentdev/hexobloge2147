@@ -290,6 +290,7 @@ footer:
     version: true
   custom_text:
 
+
 # --------------------------------------
 # Aside Settings
 # --------------------------------------
@@ -1348,6 +1349,11 @@ inject:
         })();
       </script>
 
+
+
+
+
+
   # - <script src="xxxx"></script>
 
 # CDN Settings
@@ -1428,5 +1434,4 @@ local_search:
   enable: true
   preload: false        # 可选，设为 true 则页面加载时就拉取 search.xml
   CDN:                   # 留空即可
-
 

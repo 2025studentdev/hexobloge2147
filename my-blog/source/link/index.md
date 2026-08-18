@@ -12,34 +12,7 @@ date: 2026-08-01 11:00:56
   <p style="margin: 4px 0;"><strong>描述：</strong>学最好的别人，做最好的自己</p>
 </div>
 
-logo css:
-```css
 
-.e2147-badge {
-  display: inline-flex;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 2px solid #000;
-  vertical-align: middle;
-  line-height: 1;
-  text-decoration: none;
-  box-shadow: 2px 2px 0px #000; 
-}
-.e2147-badge .badge-left {
-  background-color: #000;
-  color: #fff;
-  padding: 6px 10px;
-}
-.e2147-badge .badge-right {
-  background-color: #fff;
-  color: #000;
-  padding: 6px 10px;
-}
-
-```
 
 ## 友链列表
 
@@ -67,7 +40,7 @@ logo css:
 
 
 
-
+<br><br><br><br><br><br>
 
 
 友情链接功能已开放

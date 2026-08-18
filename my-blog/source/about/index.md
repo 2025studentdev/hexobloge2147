@@ -15,15 +15,16 @@ E = Electronic
 
 dev = Developer
 
-002147.xyz主要放一些AI生成的作品
+本站链接i.101229.xyz主要是写文章记录生活
+k1f.is-a.dev也是本站链接
 
-i.101229.xyz主要是写文章记录生活
-
-你也可以使用我的课程表在线创建：1f.cc.cd/create
 
 你可以随时联系我
 e2147dev@proton.me
 当然，最近几年可能学习比较忙，大概一周看一次邮箱
+
+
+
 
 <style>
 .e2147-badge {
@@ -51,7 +52,6 @@ e2147dev@proton.me
 }
 </style>
 
-<!-- 使用方式：直接放在文字旁边 -->
 <div class="e2147-badge">
   <span class="badge-left">e2147</span>
   <span class="badge-right">dev</span>
@@ -59,27 +59,6 @@ e2147dev@proton.me
 
 
 
-<!-- 霓虹灯文本：e2147dev -->
-<style>
-.neon-sign {
-  display: inline-block;
-  font-size: 3rem;           /* 调整大小 */
-  font-weight: 700;
-  font-family: 'Arial', sans-serif;
-  color: #ffffff;
-  text-shadow:
-    0 0 7px #1fcccd,
-    0 0 10px #1fcccd,
-    0 0 21px #1fcccd,
-    0 0 42px #0aa0a5,
-    0 0 82px #0aa0a5;
-  animation: breathe 2.4s ease-in-out infinite alternate;
-}
-
-@keyframes breathe {
-  0%   { text-shadow: 0 0 7px #1fcccd, 0 0 10px #1fcccd, 0 0 21px #1fcccd, 0 0 42px #0aa0a5, 0 0 82px #0aa0a5; opacity: 0.9; }
-  100% { text-shadow: 0 0 10px #1fcccd, 0 0 20px #1fcccd, 0 0 40px #1fcccd, 0 0 80px #0aa0a5, 0 0 120px #0aa0a5; opacity: 1; }
-}
-</style>
-
-<span class="neon-sign">e2147dev</span>
+powered by <a href="https://github.com" style="color:#000000;">Github</a><br>
+powered by <a href="https://cloudflare.com" style="color:#F48120;">Cloudflare</a><br>
+powered by <a href="https://edgeone.ai" style="color:#0052D9;">Edgeone</a>
