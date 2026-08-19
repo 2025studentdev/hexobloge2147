@@ -27,8 +27,9 @@ menu:
 
   首页: / || fas fa-home
   归档: /archives/ || fas fa-archive
-  友链: /link/ || fas fa-link
+#  友链: /link/ || fas fa-link
   关于: /about/ || fas fa-heart
+  说说: /statictalk/ || fas fa-pencil-alt
 # --------------------------------------
 # Code Blocks Settings
 # --------------------------------------
@@ -60,7 +61,7 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/
+favicon: /img/icon.webp
 
 avatar:
   img: /img/1.jpg
@@ -283,7 +284,7 @@ footer:
   nav:
   owner:
     enable: true
-    since: 2025
+    since: 2026
   # Copyright of theme and framework
   copyright:
     enable: true
@@ -1202,156 +1203,10 @@ inject:
           }
         })();
       </script>
-      
-      
-      
-      
-
-    - |
-      <style>
-        #cc-ai {
-          padding: 0.6rem 1rem !important;
-          background: var(--card-bg, #fff) !important;
-          border: 1px solid var(--border-color, #eaeef2) !important;
-          border-radius: 8px !important;
-          box-shadow: var(--card-box-shadow, 0 2px 4px rgba(0,0,0,0.05)) !important;
-          margin-bottom: 1rem !important;
-        }
-        #cc-ai .ai-title {
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: var(--meta-color, #7f8c8d);
-          margin-bottom: 0.4rem;
-        }
-        #cc-ai .ai-input-row {
-          display: flex;
-          gap: 6px;
-          margin-bottom: 0.4rem;
-        }
-        #cc-ai .ai-input-row input {
-          flex: 1;
-          padding: 0.2rem 0.4rem;
-          font-size: 0.7rem;
-          border: 1px solid var(--border-color, #ddd);
-          border-radius: 4px;
-          background: var(--input-bg, #f9f9f9);
-          color: var(--font-color, #333);
-          outline: none;
-        }
-        #cc-ai .ai-input-row input:focus {
-          border-color: #aaa;
-        }
-        #cc-ai .ai-input-row button {
-          padding: 0.2rem 0.6rem;
-          font-size: 0.7rem;
-          border: 1px solid var(--border-color, #ccc);
-          border-radius: 4px;
-          background: var(--button-bg, #eee);
-          color: var(--font-color, #333);
-          cursor: pointer;
-          transition: 0.2s;
-        }
-        #cc-ai .ai-input-row button:hover {
-          background: var(--button-hover, #ddd);
-        }
-        #cc-ai .ai-reply {
-          font-size: 0.7rem;
-          color: var(--meta-color, #95a5a6);
-          min-height: 1.4rem;
-          padding-top: 0.2rem;
-          border-top: 1px dashed var(--border-color, #eaeef2);
-          margin-top: 0.2rem;
-          word-break: break-all;
-        }
-        [data-theme="dark"] #cc-ai .ai-input-row input {
-          background: #2a2a2a;
-          border-color: #444;
-          color: #ddd;
-        }
-        [data-theme="dark"] #cc-ai .ai-input-row button {
-          background: #333;
-          border-color: #555;
-          color: #ddd;
-        }
-        [data-theme="dark"] #cc-ai .ai-input-row button:hover {
-          background: #444;
-        }
-      </style>
-      <div id="cc-ai" class="card-widget" style="display:none;">
-        <div class="ai-title">AI助手</div>
-        <div class="ai-input-row">
-          <input type="text" id="aiInput" placeholder="输入您的问题..." />
-          <button id="aiSend">发送</button>
-        </div>
-        <div class="ai-reply" id="aiReply"> 输入问题，我来回答</div>
-      </div>
-      <script>
-        (function() {
-          var replies = [
-            "服务器繁忙，请稍后重试",
-            "拒绝回答这个问题",
-            "请您换一种问法",
-            "这个问题我暂时无法处理",
-            "请您重新表述一下您的问题",
-            "对不起，我无法理解您的意思",
-            "今天不想回答，换个日子吧",
-            "我跳过这个问题，下一个"
-          ];
-
-          var input = document.getElementById('aiInput');
-          var sendBtn = document.getElementById('aiSend');
-          var replyDiv = document.getElementById('aiReply');
-
-          function getRandomReply() {
-            return replies[Math.floor(Math.random() * replies.length)];
-          }
-
-          function handleAsk() {
-            var text = input.value.trim();
-            if (!text) {
-              replyDiv.textContent = '请先输入一个问题';
-              return;
-            }
-            // 假装思考一下，直接给随机回复
-            replyDiv.textContent = getRandomReply();
-            // 清空输入框（可选）
-            // input.value = '';
-          }
-
-          sendBtn.addEventListener('click', handleAsk);
-          input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') handleAsk();
-          });
-
-          // 将卡片移动到时钟卡片之后
-          function moveAI() {
-            var aiCard = document.getElementById('cc-ai');
-            var clockCard = document.getElementById('cc-card');
-            if (clockCard && aiCard) {
-              clockCard.parentNode.insertBefore(aiCard, clockCard.nextSibling);
-              aiCard.style.display = 'block';
-            } else {
-              // 若找不到时钟卡片，则放到侧边栏顶部
-              var aside = document.querySelector('.aside-content');
-              if (aside && aiCard) {
-                aside.insertBefore(aiCard, aside.firstChild);
-                aiCard.style.display = 'block';
-              } else {
-                if (aiCard) aiCard.style.display = 'block';
-              }
-            }
-          }
-
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', moveAI);
-          } else {
-            moveAI();
-          }
-        })();
-      </script>
 
 
 
+    - <script src="/js/motivation.js"></script>
     
 
 
@@ -1436,4 +1291,17 @@ local_search:
   enable: true
   preload: false        # 可选，设为 true 则页面加载时就拉取 search.xml
   CDN:                   # 留空即可
+
+
+
+staticTalk:
+  enable: true
+  title: 说说  # 页面标题，可选
+  path: statictalk # 生成路径，如 yoursite.com/statictalk，可选
+  avatar: /img/icon.webp
+  defaultStyle: true # 使用默认样式
+  customStyle: # 自定义样式，可选
+  markdownRender: true # 是否渲染Markdown
+  limit: 20
+
 
