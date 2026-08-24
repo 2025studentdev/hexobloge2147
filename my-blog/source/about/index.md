@@ -19,7 +19,6 @@ dev = Developer
 本站链接较多
 101229.xyz和k1f.is-a.dev托管于Cloudflare
 cdn.101229.xyz托管于Tencent edgeone pages
-blog.101229.xyz托管于Github pages
 按需访问，不同厂商访问速度可能不同，内容完全相同
 
 请注意：以101229.xyz为主站链接

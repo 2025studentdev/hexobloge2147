@@ -64,14 +64,14 @@ social:
 favicon: /img/icon.webp
 
 avatar:
-  img: /img/1.jpg
+  img: /img/icon.webp
   effect: false
 
 # Disable all banner images
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img: /img/8.jpg
+default_top_img: /img/7.jpg
 
 # The banner image of index page
 index_img:
