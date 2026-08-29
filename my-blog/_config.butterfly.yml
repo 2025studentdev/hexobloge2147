@@ -318,12 +318,9 @@ aside:
       link: https://github.com/2025studentdev
   card_announcement:
     enable: true
-    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a> <br> <a href="/create/countdown">高考倒计时</a> <br> 
-
-<a href="/create/luck">今日人品</a> <br>
-
-<a href="/x/qt">music</a> <br>
-
+    content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a>
+<br><br>
+Learn from the best，be your best
 '
   card_recent_post:
     enable: true
@@ -1099,121 +1096,11 @@ inject:
   head:
   # - <link rel="stylesheet" href="/xxx.css">
   bottom:
-    - |
-      <style>
-        #cc-card {
-          padding: 0.6rem 1rem !important;
-          background: var(--card-bg, #fff) !important;
-          border: 1px solid var(--border-color, #eaeef2) !important;
-          border-radius: 8px !important;
-          box-shadow: var(--card-box-shadow, 0 2px 4px rgba(0,0,0,0.05)) !important;
-          margin-bottom: 1rem !important;
-        }
-        /* 全部改为块级元素，各占一行 */
-        #cc-card .cc-time {
-          display: block;
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: var(--font-color, #2c3e50);
-          letter-spacing: 0.5px;
-          line-height: 1.5;
-          margin-bottom: 0.1rem;  /* 时间与日期之间的间距 */
-        }
-        #cc-card .cc-date {
-          display: block;
-          font-size: 0.7rem;
-          color: var(--meta-color, #7f8c8d);
-          line-height: 1.5;
-          margin-bottom: 0.4rem;  /* 日期与下一条的间距 */
-        }
-        /* 元信息也分行，且不再使用 flex */
-        #cc-card .cc-meta {
-          font-size: 0.65rem;
-          color: var(--meta-color, #95a5a6);
-          line-height: 1.8;        /* 行高适当加大，让两行之间有透气感 */
-        }
-        #cc-card .cc-meta span {
-          display: block;          /* 每个span单独占一行 */
-          margin-bottom: 0.1rem;   /* 两条元信息之间的间距 */
-        }
-        #cc-card .cc-meta span:last-child {
-          margin-bottom: 0;        /* 最后一条不留间距 */
-        }
-      </style>
-      <div id="cc-card" class="card-widget" style="display:none;">
-        <!-- 时间单独一行 -->
-        <span class="cc-time" id="ccTime">--:--</span>
-        <!-- 日期单独一行 -->
-        <span class="cc-date" id="ccDate">----年--月--日 星期-</span>
-        <!-- 倒计时和励志语各占一行 -->
-        <div class="cc-meta">
-          <span id="ccCountdown">距离周末还有 - 天</span>
-          <span id="ccMotto">今天又是努力学习的一天</span>
-        </div>
-      </div>
-      <script>
-        (function() {
-          function pad(n) { return n < 10 ? '0' + n : n; }
-          function getWeekday(day) {
-            return ['日', '一', '二', '三', '四', '五', '六'][day];
-          }
-          function update() {
-            var now = new Date();
-            var h = pad(now.getHours());
-            var m = pad(now.getMinutes());
-            var y = now.getFullYear();
-            var mon = now.getMonth() + 1;
-            var d = now.getDate();
-            var day = now.getDay();
-            var wd = getWeekday(day);
-
-            document.getElementById('ccTime').textContent = h + ':' + m;
-            document.getElementById('ccDate').textContent = y + '年' + mon + '月' + d + '日 星期' + wd;
-
-            var countdownText = '';
-            if (day === 0 || day === 6) {
-              countdownText = '放假了！';
-            } else {
-              var daysToSat = 6 - day;
-              countdownText = '距离周末还有 ' + daysToSat + ' 天';
-            }
-            document.getElementById('ccCountdown').textContent = countdownText;
-          }
-
-          function moveCard() {
-            var card = document.getElementById('cc-card');
-            var ann = document.querySelector('.card-announcement');
-            if (ann && card) {
-              ann.parentNode.insertBefore(card, ann.nextSibling);
-              card.style.display = 'block';
-            } else {
-              var aside = document.querySelector('.aside-content');
-              if (aside && card) {
-                aside.insertBefore(card, aside.firstChild);
-                card.style.display = 'block';
-              } else {
-                if (card) card.style.display = 'block';
-              }
-            }
-          }
-
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-              update();
-              moveCard();
-              setInterval(update, 1000);
-            });
-          } else {
-            update();
-            moveCard();
-            setInterval(update, 1000);
-          }
-        })();
-      </script>
 
 
 
-    - <script src="/js/motivation.js"></script>
+
+    
     
 
 
