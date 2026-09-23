@@ -18,16 +18,16 @@ nav:
   fixed: false
 
 menu:
-# Home: / || fas fa-home
-# List||fas fa-list:
-#   Music: /music/ || fas fa-music
-#   Movie: /movies/ || fas fa-video
+  # Home: / || fas fa-home
+  # List||fas fa-list:
+  #   Music: /music/ || fas fa-music
+  #   Movie: /movies/ || fas fa-video
 
 
 
   首页: / || fas fa-home
   归档: /archives/ || fas fa-archive
-#  友链: /link/ || fas fa-link
+  #  友链: /link/ || fas fa-link
   关于: /about/ || fas fa-heart
   说说: /statictalk/ || fas fa-pencil-alt
 # --------------------------------------
@@ -53,7 +53,7 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
-    fas fa-rss: /atom.xml || RSS || '#ff6600'
+  fas fa-rss: /atom.xml || RSS || '#ff6600'
 # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
 # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
 
@@ -321,6 +321,7 @@ aside:
     content: '欢迎来到我的博客 <br><br>有问题请联系：<a href="mailto:e2147dev@proton.me">e2147dev@proton.me</a>
 <br><br>
 Learn from the best，be your best
+<br><br>综合站点：https://e-2.top/
 '
   card_recent_post:
     enable: true
@@ -1100,8 +1101,8 @@ inject:
 
 
 
-    
-    
+
+
 
 
 
@@ -1197,5 +1198,4 @@ staticTalk:
   customStyle: # 自定义样式，可选
   markdownRender: true # 是否渲染Markdown
   limit: 20
-
 
