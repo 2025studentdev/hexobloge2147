@@ -2,34 +2,170 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目展示</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>e2</title>
     <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            background-color: #000;
-            color: #fff;
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            text-align: center;
-            padding: 20px;
-        }
-        h1, p {
-            margin: 0;
-            font-size: inherit;
-            font-weight: normal;
-            line-height: 1.4;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{height:100%;background:#000;overflow:hidden;cursor:crosshair}
+        #c{display:block;position:fixed;inset:0}
     </style>
 </head>
 <body>
-<h1>创建你的个人项目展示页</h1>
-<p>放在x/目录下展示</p>
+<canvas id="c"></canvas>
+<script>
+    (() => {
+        'use strict';
+
+        const c   = document.getElementById('c');
+        const ctx = c.getContext('2d', { alpha: false, desynchronized: true });
+
+        let VW = 0, VH = 0, DPR = 1;
+
+        function resize() {
+            DPR = Math.min(window.devicePixelRatio || 1, 1.5);   // 上限 1.5，省填充率
+            VW = window.innerWidth;
+            VH = window.innerHeight;
+            c.width  = Math.round(VW * DPR);
+            c.height = Math.round(VH * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, VW, VH);
+        }
+
+        // ---------- 斐波那契球点云（预算好三角函数相关量） ----------
+        const N  = 1000;
+        const GA = Math.PI * (1 + Math.sqrt(5));
+        const pts = new Array(N);
+
+        for (let i = 0; i < N; i++) {
+            const y  = 1 - ((i + 0.5) / N) * 2;
+            const r  = Math.sqrt(1 - y * y);
+            const th = GA * i;
+            pts[i] = {
+                x:  Math.cos(th) * r,
+                y:  y,
+                z:  Math.sin(th) * r,
+                a1: th * 3,                 // 呼吸相位
+                a2: (th * 57.2958) % 360    // 色相偏移
+            };
+        }
+
+        // ---------- 颜色查找表：色相 × 亮度，避免每帧拼字符串 ----------
+        const HUE_N = 18, LIT_N = 6;
+        const HUE_D = 360 / HUE_N, LIT_D = 1 / (LIT_N - 1);
+        const COLORS = new Array(HUE_N);
+        for (let h = 0; h < HUE_N; h++) {
+            const hue = h * HUE_D;
+            const row = new Array(LIT_N);
+            for (let l = 0; l < LIT_N; l++) {
+                row[l] = 'hsl(' + (hue | 0) + ',100%,' + ((42 + l * LIT_D * 28) | 0) + '%)';
+            }
+            COLORS[h] = row;
+        }
+
+        // ---------- 交互 ----------
+        let mx = 0, my = 0, px = 0, py = 0;
+        const ripples = [];
+
+        window.addEventListener('pointermove', e => {
+            mx = (e.clientX / (VW || 1)) * 2 - 1;
+            my = (e.clientY / (VH || 1)) * 2 - 1;
+        }, { passive: true });
+
+        window.addEventListener('pointerdown', e => {
+            ripples.push({ x: e.clientX, y: e.clientY, r: 0, a: 1, hue: (Math.random() * 360) | 0 });
+        }, { passive: true });
+
+        // ---------- 主循环 ----------
+        let t = 0;
+        const TAU = 6.28318530718;
+
+        function frame() {
+            requestAnimationFrame(frame);
+
+            t  += 0.006;
+            px += (mx - px) * 0.045;
+            py += (my - py) * 0.045;
+
+            // 残影
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'rgba(0,0,0,0.17)';
+            ctx.fillRect(0, 0, VW, VH);
+
+            ctx.globalCompositeOperation = 'lighter';
+
+            const ay  = t * 0.55 + px * 1.15;
+            const ax  = Math.sin(t * 0.4) * 0.5 + py * 0.95;
+            const cAy = Math.cos(ay), sAy = Math.sin(ay);
+            const cAx = Math.cos(ax), sAx = Math.sin(ax);
+
+            const R      = Math.min(VW, VH) * 0.36;
+            const cxs    = VW * 0.5;
+            const cys    = VH * 0.5;
+            const FOV    = 3.0;
+            const baseHue = (t * 60) % 360;
+            const invHueD = 1 / HUE_D;
+
+            let lastStyle = null;
+
+            for (let i = 0; i < N; i++) {
+                const p = pts[i];
+
+                // 呼吸起伏（单次三角函数）
+                const w = 1 + 0.10 * Math.sin(p.a1 + t * 3.0);
+                const x = p.x * w, y = p.y * w, z = p.z * w;
+
+                // 绕 Y 轴
+                const x1 = x * cAy - z * sAy;
+                const z1 = x * sAy + z * cAy;
+                // 绕 X 轴
+                const y1 = y * cAx - z1 * sAx;
+                const z2 = y * sAx + z1 * cAx;
+
+                // 透视
+                const k  = FOV / (FOV + z2);
+                const sx = cxs + x1 * R * k * 1.4;
+                const sy = cys + y1 * R * k * 1.4;
+
+                const size = k * k * 2.0;
+                const s = size < 0.6 ? 0.6 : (size > 3.2 ? 3.2 : size);
+
+                // 颜色查表
+                let hi = ((baseHue + p.a2) % 360) * invHueD | 0;
+                if (hi < 0) hi += HUE_N;
+                else if (hi >= HUE_N) hi -= HUE_N;
+
+                let li = ((z2 * 0.5 + 0.5) * (LIT_N - 1) + 0.5) | 0;
+                if (li < 0) li = 0;
+                else if (li >= LIT_N) li = LIT_N - 1;
+
+                const style = COLORS[hi][li];
+                if (style !== lastStyle) { ctx.fillStyle = style; lastStyle = style; }
+
+                ctx.globalAlpha = k * k * 0.62 + 0.08;
+                ctx.fillRect(sx, sy, s, s);
+            }
+
+            // 点击涟漪
+            ctx.globalAlpha = 1;
+            ctx.lineWidth = 2;
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                const r = ripples[i];
+                r.r += 7.5;
+                r.a *= 0.945;
+                if (r.a < 0.02) { ripples.splice(i, 1); continue; }
+                ctx.beginPath();
+                ctx.arc(r.x, r.y, r.r, 0, TAU);
+                ctx.strokeStyle = 'hsla(' + r.hue + ',100%,62%,' + r.a.toFixed(3) + ')';
+                ctx.stroke();
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(frame);
+    })();
+</script>
 </body>
 </html>
