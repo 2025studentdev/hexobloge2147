@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>答案之书</title>
+    <style>
+        /* ----- 全局重置 & 基础样式 ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ffffff;
+            /* 纯黑网格（SVG 绘制，严格遵守禁用 CSS 渐变的要求） */
+            background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 30 0 L 0 0 0 30' fill='none' stroke='%23000000' stroke-width='0.3'/%3E%3C/svg%3E");
+            font-family: 'Courier New', Courier, monospace;
+            color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            padding: 40px 40px 48px;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s;
+        }
+
+        /* ----- 头部 ----- */
+        h1 {
+            font-size: 26px;
+            text-align: center;
+            margin-bottom: 4px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 12px;
+            margin-bottom: 36px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 18px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        /* ----- 输入区 ----- */
+        .input-group {
+            margin-bottom: 4px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            transition: border 0.15s, padding 0.15s;
+        }
+
+        textarea:focus {
+            border-width: 2px;
+            padding: 11px 13px;
+        }
+
+        .error-msg {
+            color: #cc0000;
+            font-size: 12px;
+            margin-top: 4px;
+            margin-bottom: 14px;
+            height: 18px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* ----- 按钮 ----- */
+        button {
+            width: 100%;
+            padding: 13px;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-style 0.2s;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        button:disabled {
+            background-color: #ffffff;
+            color: #000000;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        /* ----- 结果区 ----- */
+        #result-box {
+            margin-top: 32px;
+            border-top: 1px dashed #000000;
+            padding-top: 24px;
+            transition: opacity 0.25s;
+        }
+
+        #result-box.hidden {
+            display: none;
+        }
+
+        .result-label {
+            font-size: 11px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        #result-text {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.6;
+            min-height: 36px;
+            word-break: break-word;
+        }
+
+        /* ----- 分类标签 ----- */
+        #result-category {
+            margin-top: 12px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            transition: opacity 0.4s;
+            font-style: italic;
+        }
+
+        #result-category.hidden-cat {
+            opacity: 0;
+        }
+
+        /* ----- 打字光标 ----- */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 22px;
+            background-color: #000000;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* ----- 小屏适配 ----- */
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 20px 32px;
+            }
+            h1 {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+            #result-text {
+                font-size: 17px;
+            }
+            textarea {
+                font-size: 14px;
+            }
+            button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>答案之书</h1>
+    <p class="subtitle">THE BOOK OF ANSWERS</p>
+
+    <div class="input-group">
+        <label for="question">输入你的问题</label>
+        <textarea id="question" rows="3" placeholder="在此处写下你的困惑…"></textarea>
+    </div>
+    <div class="error-msg" id="error-msg"></div>
+
+    <button id="submit-btn">完成</button>
+
+    <div id="result-box" class="hidden">
+        <div class="result-label">答案</div>
+        <div id="result-text"></div>
+        <div id="result-category" class="hidden-cat"></div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    //  1. 丰富答案库  ——  120 条，分 6 类，每类 20 条
+    // ============================================================
+    const answers = [
+
+        // ---------- 肯定 · 决心 ----------
+        { text: "是的，勇往直前。", category: "肯定" },
+        { text: "毫无疑问，这是正确的选择。", category: "肯定" },
+        { text: "绝对如此，相信你的判断。", category: "肯定" },
+        { text: "正是这样，无需怀疑。", category: "肯定" },
+        { text: "当然可以，大胆去做。", category: "肯定" },
+        { text: "你的直觉是对的，坚持下去。", category: "肯定" },
+        { text: "这个方向值得全力以赴。", category: "肯定" },
+        { text: "成功就在眼前，继续前进。", category: "肯定" },
+        { text: "你的选择明智而果断。", category: "肯定" },
+        { text: "这是命运给你的机会。", category: "肯定" },
+        { text: "肯定的答案，不要犹豫。", category: "肯定" },
+        { text: "你走在正确的道路上。", category: "肯定" },
+        { text: "一切迹象都指向肯定的答案。", category: "肯定" },
+        { text: "大胆去做，结果会证明一切。", category: "肯定" },
+        { text: "你的心已经给出了答案。", category: "肯定" },
+        { text: "这是你应得的，去争取吧。", category: "肯定" },
+        { text: "毫无疑问，向前迈进。", category: "肯定" },
+        { text: "是的，而且比你想象的更好。", category: "肯定" },
+        { text: "肯定的，这是你的时刻。", category: "肯定" },
+        { text: "全力以赴，不留遗憾。", category: "肯定" },
+
+        // ---------- 否定 · 警示 ----------
+        { text: "现在不是时候，耐心等待。", category: "警示" },
+        { text: "恐怕不会如你所愿，调整计划。", category: "警示" },
+        { text: "这个方向可能行不通，重新考虑。", category: "警示" },
+        { text: "谨慎行事，风险比你想象的高。", category: "警示" },
+        { text: "答案是否定的，但别灰心。", category: "警示" },
+        { text: "时机未到，继续观察。", category: "警示" },
+        { text: "这不是你的最佳选择。", category: "警示" },
+        { text: "需要重新审视你的假设。", category: "警示" },
+        { text: "前路坎坷，建议暂缓。", category: "警示" },
+        { text: "这个决定需要更多思考。", category: "警示" },
+        { text: "不要急于求成，等待信号。", category: "警示" },
+        { text: "你的担忧是有道理的，重新评估。", category: "警示" },
+        { text: "这条路可能通往死胡同。", category: "警示" },
+        { text: "现在不是冒险的时候。", category: "警示" },
+        { text: "答案是否定的，但会有更好的机会。", category: "警示" },
+        { text: "谨慎，前方有未知的障碍。", category: "警示" },
+        { text: "你的计划存在漏洞，修补后再行动。", category: "警示" },
+        { text: "不要被表象迷惑，深入调查。", category: "警示" },
+        { text: "这个选择可能带来不必要的麻烦。", category: "警示" },
+        { text: "暂时搁置，等待更好的时机。", category: "警示" },
+
+        // ---------- 行动 · 建议 ----------
+        { text: "立即行动，不要再犹豫。", category: "行动" },
+        { text: "迈出第一步，剩下的自然会跟上。", category: "行动" },
+        { text: "现在是行动的最佳时机。", category: "行动" },
+        { text: "从小处着手，逐步推进。", category: "行动" },
+        { text: "行动起来，用实践检验真理。", category: "行动" },
+        { text: "制定计划，然后坚决执行。", category: "行动" },
+        { text: "不要等待完美的时机，现在就是。", category: "行动" },
+        { text: "主动出击，机会不会等你。", category: "行动" },
+        { text: "每天进步一点点，积少成多。", category: "行动" },
+        { text: "勇敢尝试，即使失败也是收获。", category: "行动" },
+        { text: "先完成，再完美。", category: "行动" },
+        { text: "用行动代替空想。", category: "行动" },
+        { text: "抓住这个机会，不要放手。", category: "行动" },
+        { text: "快速试错，及时调整。", category: "行动" },
+        { text: "现在就开始，不要拖延。", category: "行动" },
+        { text: "行动胜于言辞，去做吧。", category: "行动" },
+        { text: "把大目标分解成小步骤。", category: "行动" },
+        { text: "今天就是改变的最好时机。", category: "行动" },
+        { text: "果断行动，犹豫会错过机会。", category: "行动" },
+        { text: "用汗水浇灌你的梦想。", category: "行动" },
+
+        // ---------- 哲理 · 沉思 ----------
+        { text: "答案早已在你心中，只是需要倾听。", category: "哲理" },
+        { text: "有时候，问题比答案更重要。", category: "哲理" },
+        { text: "时间的流逝会揭示一切真相。", category: "哲理" },
+        { text: "静下心来，答案自会浮现。", category: "哲理" },
+        { text: "你寻找的东西，也在寻找你。", category: "哲理" },
+        { text: "变化是唯一的不变。", category: "哲理" },
+        { text: "真正的智慧在于知道自己不知道。", category: "哲理" },
+        { text: "每个终点都是新的起点。", category: "哲理" },
+        { text: "生命的意义在于不断探索。", category: "哲理" },
+        { text: "你所抗拒的，恰恰是你需要面对的。", category: "哲理" },
+        { text: "答案不在外面，而在你的内心深处。", category: "哲理" },
+        { text: "一切都是最好的安排。", category: "哲理" },
+        { text: "成长往往伴随着痛苦和不确定。", category: "哲理" },
+        { text: "你看到的世界，是你内心的投射。", category: "哲理" },
+        { text: "有时候，放手反而是最大的拥有。", category: "哲理" },
+        { text: "生命的答案往往在行动中显现。", category: "哲理" },
+        { text: "你的问题已经包含了答案的种子。", category: "哲理" },
+        { text: "宇宙自有其节奏，信任它。", category: "哲理" },
+        { text: "真正的力量来自于接纳。", category: "哲理" },
+        { text: "在静默中，你能听到最清晰的声音。", category: "哲理" },
+
+        // ---------- 鼓励 · 支持 ----------
+        { text: "你有能力跨越这个障碍。", category: "鼓励" },
+        { text: "相信自己，你比想象中更强大。", category: "鼓励" },
+        { text: "每一次尝试都是向成功迈进。", category: "鼓励" },
+        { text: "你的潜力是无限的。", category: "鼓励" },
+        { text: "不要害怕失败，它是成功的垫脚石。", category: "鼓励" },
+        { text: "你已经走了这么远，继续前行。", category: "鼓励" },
+        { text: "你值得拥有最好的。", category: "鼓励" },
+        { text: "相信自己，你完全有能力做到。", category: "鼓励" },
+        { text: "困难只是暂时的，坚持就是胜利。", category: "鼓励" },
+        { text: "你的努力终将得到回报。", category: "鼓励" },
+        { text: "你比你想象的更勇敢。", category: "鼓励" },
+        { text: "不要放弃，光明就在前方。", category: "鼓励" },
+        { text: "你拥有改变一切的力量。", category: "鼓励" },
+        { text: "相信自己，你正在创造奇迹。", category: "鼓励" },
+        { text: "每一次跌倒都是成长的机会。", category: "鼓励" },
+        { text: "你的人生由你书写，勇敢下笔。", category: "鼓励" },
+        { text: "你是自己命运的主宰。", category: "鼓励" },
+        { text: "继续前进，你离目标越来越近。", category: "鼓励" },
+        { text: "你的坚持终将开花结果。", category: "鼓励" },
+        { text: "相信自己，你值得所有的美好。", category: "鼓励" },
+
+        // ---------- 幽默 · 轻松 ----------
+        { text: "这个问题有点难，换一个试试？", category: "幽默" },
+        { text: "答案正在路上，堵车了。", category: "幽默" },
+        { text: "我猜你心里已经有答案了。", category: "幽默" },
+        { text: "别问我，我只是个程序。", category: "幽默" },
+        { text: "要不你抛个硬币决定？", category: "幽默" },
+        { text: "这个问题让我也陷入了沉思。", category: "幽默" },
+        { text: "答案就是——你猜？", category: "幽默" },
+        { text: "我觉得你只是想找个人聊聊。", category: "幽默" },
+        { text: "如果我知道答案，我就不是书了。", category: "幽默" },
+        { text: "你确定想知道答案吗？", category: "幽默" },
+        { text: "答案在风中飘~", category: "幽默" },
+        { text: "这个问题超出了我的权限范围。", category: "幽默" },
+        { text: "我建议你问问你的猫。", category: "幽默" },
+        { text: "答案其实很简单，但我不想告诉你。", category: "幽默" },
+        { text: "你这个问题问得很有水平。", category: "幽默" },
+        { text: "我觉得你心里已经有数了。", category: "幽默" },
+        { text: "答案就是……等一下，我翻翻书。", category: "幽默" },
+        { text: "这个问题让我有点懵。", category: "幽默" },
+        { text: "要不你明天再问一次？", category: "幽默" },
+        { text: "答案就在你的手机里，自己查。", category: "幽默" },
+    ];
+
+    // ============================================================
+    //  2. DOM 引用 & 状态
+    // ============================================================
+    const submitBtn = document.getElementById('submit-btn');
+    const questionInput = document.getElementById('question');
+    const resultBox = document.getElementById('result-box');
+    const resultText = document.getElementById('result-text');
+    const resultCategory = document.getElementById('result-category');
+    const errorMsg = document.getElementById('error-msg');
+
+    let isGenerating = false; // 防止重复点击
+
+    // ============================================================
+    //  3. 核心逻辑
+    // ============================================================
+
+    // 3.1 生成回答
+    function generateAnswer() {
+        if (isGenerating) return;
+
+        const question = questionInput.value.trim();
+        errorMsg.textContent = '';
+
+        if (!question) {
+            errorMsg.textContent = '✖ 输入不能为空。';
+            return;
+        }
+
+        // 锁定界面
+        isGenerating = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '翻阅中…';
+        resultBox.classList.remove('hidden');
+        resultText.innerHTML = '<span class="cursor"></span>';
+        resultCategory.textContent = '';
+        resultCategory.classList.add('hidden-cat');
+
+        // 随机延迟 500~900ms，模拟翻阅感
+        const delay = 500 + Math.random() * 400;
+
+        setTimeout(() => {
+            // 随机选取一条答案
+            const picked = answers[Math.floor(Math.random() * answers.length)];
+
+            // 打字机效果
+            typeWriter(picked.text, () => {
+                // 打字完成后显示分类标签
+                resultCategory.textContent = '✦ ' + picked.category;
+                resultCategory.classList.remove('hidden-cat');
+
+                // 恢复按钮
+                submitBtn.disabled = false;
+                submitBtn.textContent = '完成';
+                isGenerating = false;
+            });
+        }, delay);
+    }
+
+    // 3.2 打字机效果
+    function typeWriter(text, onComplete) {
+        let i = 0;
+        resultText.innerHTML = '';
+
+        function type() {
+            if (i < text.length) {
+                // 逐字追加
+                resultText.textContent += text.charAt(i);
+                i++;
+                // 随机速度 50~120ms，更自然
+                const speed = 50 + Math.random() * 70;
+                setTimeout(type, speed);
+            } else {
+                // 光标保留
+                const cursor = document.createElement('span');
+                cursor.className = 'cursor';
+                resultText.appendChild(cursor);
+                if (onComplete) onComplete();
+            }
+        }
+        type();
+    }
+
+    // 3.3 事件绑定
+    submitBtn.addEventListener('click', generateAnswer);
+
+    questionInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            generateAnswer();
+        }
+    });
+
+    // 3.4 输入时清空错误提示
+    questionInput.addEventListener('input', () => {
+        errorMsg.textContent = '';
+    });
+
+</script>
+</body>
+</html>

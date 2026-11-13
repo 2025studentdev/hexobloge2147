@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>晴天 · Piano</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;font-family:system-ui,sans-serif}.card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);padding:50px 44px;border-radius:28px;border:1px solid rgba(255,255,255,.06);text-align:center;max-width:400px;width:90%}button{background:#fff;border:none;padding:18px 0;border-radius:16px;font-size:20px;font-weight:700;color:#111;cursor:pointer;width:100%;transition:.15s;letter-spacing:2px}button:hover{background:#f5f5f5;transform:scale(1.02)}button:active{transform:scale(.98)}button:disabled{opacity:.4;pointer-events:none}.sub{color:#666;font-size:11px;margin-top:18px;letter-spacing:1px}
+    </style>
+</head>
+<body>
+<div class="card">
+    <button id="btn">弹奏 · 晴天</button>
+</div>
+<script>
+    !function(){const b=document.getElementById("btn");let c,p=!1;
+// 编码谱面: [midi,dur] 紧凑数组
+        const S=[[64,1],[62,1],[65,1],[64,1],[60,1],[67,1],[71,1],[60,1],[71,1],[67,1],[60,1],[60,1],[69,1],[69,1],[69,1],[67,1],[67,1],[67,1],[65,1],[64,1],[62,1],[64,1],[65,1],[64,1],[76,1],[77,1],[67,1],[64,1],[67,1],[71,1],[62,1],[71,1],[60,1],[60,1.5],[60,1],[60,1],[67,1],[67,1],[69,1],[67,1],[65,1],[62,1],[64,1],[65,1],[67,1],[69,1],[60,1.5],[69,1],[71,1],[71,1],[64,1],[62,1],[65,1],[64,1],[60,1],[67,1],[71,1],[60,1],[71,1],[67,1],[60,1],[60,1],[69,1],[69,1],[69,1],[67,1],[67,1],[67,1],[65,1],[64,1],[62,1],[64,1],[65,1],[64,1.5],[76,1],[77,1],[67,1],[64,1],[64,1],[67,1],[71,1],[62,1],[71,1],[60,1],[60,1.5],[60,1],[60,1],[60,1],[67,1],[67,1],[69,1],[67,1],[65,1],[69,1],[71,1],[60,1],[62,1],[64,1],[62,1],[0,1],[0,1],[67,1],[64,1],[60,1.5]];
+
+        function init(){if(!c)c=new(window.AudioContext||window.webkitAudioContext)();c.state==="suspended"&&c.resume();return c.currentTime}
+
+// 钢琴物理建模合成器
+        function piano(t,m,d){
+            if(m===0)return;
+            const f=440*Math.pow(2,(m-69)/12),g=c.createGain(),mg=c.createGain();
+            mg.gain.value=0.35; // 主音量控制，防止削波
+
+// 泛音列叠加 (模拟琴弦谐波)
+            [1,2,3,4].forEach((h,i)=>{
+                const o=c.createOscillator(),hg=c.createGain();
+                o.type="sine";
+                o.frequency.value=f*h;
+// 高次泛音音量递减
+                hg.gain.value=[1,0.5,0.25,0.12][i];
+                o.connect(hg);hg.connect(g);
+                o.start(t);o.stop(t+d+1);
+            });
+
+// 钢琴ADSR: 快起音 + 自然衰减
+            g.connect(mg);mg.connect(c.destination);
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(1,t+0.008); // 击弦瞬间
+            g.gain.exponentialRampToValueAtTime(0.01,t+d*0.8+0.5); // 琴弦自然衰减
+
+// 简易立体声 (利用左右耳延时差)
+            const dl=c.createDelay();dl.delayTime.value=0.0003;
+            const dr=c.createDelay();dr.delayTime.value=0.0004;
+            const gl=c.createGain(),gr=c.createGain();
+            gl.gain.value=0.5;gr.gain.value=0.5;
+            mg.connect(dl);dl.connect(gl);gl.connect(c.destination);
+            mg.connect(dr);dr.connect(gr);gr.connect(c.destination);
+        }
+
+        b.onclick=()=>{
+            if(p)return;p=!0;b.disabled=!0;
+            const t0=init(),beat=60/140;let cur=t0+0.05;
+            S.forEach(([m,d])=>{piano(cur,m,beat*d);cur+=beat*d});
+            setTimeout(()=>{p=!1;b.disabled=!1},(cur-t0)*1e3+800);
+        };
+    }();
+</script>
+</body>
+</html>
