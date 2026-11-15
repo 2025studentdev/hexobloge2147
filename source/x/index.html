@@ -1,171 +1,267 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>e2</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>晴天</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        html,body{height:100%;background:#000;overflow:hidden;cursor:crosshair}
-        #c{display:block;position:fixed;inset:0}
+        html,body{height:100%}
+        body{
+            display:grid;place-items:center;
+            padding:24px;
+            background:#0f0f0f;
+            color:#eaeaea;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        .card{
+            width:100%;max-width:340px;
+            padding:40px 36px 36px;
+            background:#141414;
+            border:1px solid #222;
+            border-radius:10px;
+        }
+
+        h1{
+            font-family:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC",Georgia,"Times New Roman",serif;
+            font-size:clamp(32px,8vw,40px);
+            font-weight:500;
+            letter-spacing:6px;
+            line-height:1;
+            color:#f2f2f2;
+            padding-left:4px; /* 平衡 letter-spacing 造成的视觉右偏 */
+        }
+
+        .rule{
+            width:32px;height:1px;
+            background:#2e2e2e;
+            margin:24px 0 30px;
+        }
+
+        .times{
+            display:flex;justify-content:space-between;
+            font-size:11px;
+            font-variant-numeric:tabular-nums;
+            letter-spacing:.5px;
+            color:#5a5a5a;
+            margin-bottom:10px;
+        }
+
+        .track{
+            height:1px;
+            background:#262626;
+            margin-bottom:32px;
+            overflow:hidden;
+        }
+        .track i{
+            display:block;
+            height:100%;
+            width:0%;
+            background:#e0e0e0;
+        }
+
+        .btn{
+            display:flex;align-items:center;justify-content:center;
+            gap:10px;
+            width:100%;height:50px;
+            background:transparent;
+            border:1px solid #2b2b2b;
+            border-radius:6px;
+            color:#eaeaea;
+            font-family:inherit;
+            font-size:13px;font-weight:500;
+            letter-spacing:4px;
+            padding-left:4px;
+            cursor:pointer;
+            transition:border-color .2s,background .2s,color .2s;
+        }
+        .btn:hover:not(:disabled){
+            border-color:#444;
+            background:#181818;
+        }
+        .btn:active:not(:disabled){
+            background:#1c1c1c;
+        }
+        .btn:disabled{
+            cursor:default;
+            color:#666;
+            border-color:#242424;
+        }
+
+        .btn svg{
+            width:10px;height:10px;
+            flex-shrink:0;
+            margin-left:-2px;
+        }
     </style>
 </head>
 <body>
-<canvas id="c"></canvas>
+<div class="card">
+    <h1>晴天</h1>
+    <div class="rule"></div>
+
+    <div class="times">
+        <span id="cur">0:00</span>
+        <span id="dur">0:47</span>
+    </div>
+    <div class="track"><i id="fill"></i></div>
+
+    <button class="btn" id="btn">
+        <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+            <path d="M2 1v8l7-4z"/>
+        </svg>
+        <span id="lbl">播放</span>
+    </button>
+</div>
+
 <script>
-    (() => {
-        'use strict';
+    !function(){
+        const btn  = document.getElementById('btn');
+        const lbl  = document.getElementById('lbl');
+        const cur  = document.getElementById('cur');
+        const dur  = document.getElementById('dur');
+        const fill = document.getElementById('fill');
 
-        const c   = document.getElementById('c');
-        const ctx = c.getContext('2d', { alpha: false, desynchronized: true });
+        const S=[[64,1],[62,1],[65,1],[64,1],[60,1],[67,1],[71,1],[60,1],[71,1],[67,1],[60,1],[60,1],[69,1],[69,1],[69,1],[67,1],[67,1],[67,1],[65,1],[64,1],[62,1],[64,1],[65,1],[64,1],[76,1],[77,1],[67,1],[64,1],[67,1],[71,1],[62,1],[71,1],[60,1],[60,1.5],[60,1],[60,1],[67,1],[67,1],[69,1],[67,1],[65,1],[62,1],[64,1],[65,1],[67,1],[69,1],[60,1.5],[69,1],[71,1],[71,1],[64,1],[62,1],[65,1],[64,1],[60,1],[67,1],[71,1],[60,1],[71,1],[67,1],[60,1],[60,1],[69,1],[69,1],[69,1],[67,1],[67,1],[67,1],[65,1],[64,1],[62,1],[64,1],[65,1],[64,1.5],[76,1],[77,1],[67,1],[64,1],[64,1],[67,1],[71,1],[62,1],[71,1],[60,1],[60,1.5],[60,1],[60,1],[60,1],[67,1],[67,1],[69,1],[67,1],[65,1],[69,1],[71,1],[60,1],[62,1],[64,1],[62,1],[0,1],[0,1],[67,1],[64,1],[60,1.5]];
 
-        let VW = 0, VH = 0, DPR = 1;
+        const BEAT  = 60/140;
+        const TOTAL = S.reduce((a,[,d]) => a+d, 0) * BEAT;
 
-        function resize() {
-            DPR = Math.min(window.devicePixelRatio || 1, 1.5);   // 上限 1.5，省填充率
-            VW = window.innerWidth;
-            VH = window.innerHeight;
-            c.width  = Math.round(VW * DPR);
-            c.height = Math.round(VH * DPR);
-            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, VW, VH);
+        function fmt(s){
+            const m = Math.floor(s/60);
+            const ss = Math.floor(s%60).toString().padStart(2,'0');
+            return m + ':' + ss;
+        }
+        dur.textContent = fmt(TOTAL);
+
+        // —— 音频 ——
+        let ac, master, dry, wet, wave;
+        let playing = false, rafId = 0, t0 = 0;
+
+        function buildGraph(){
+            if(ac) return;
+            ac = new (window.AudioContext || window.webkitAudioContext)();
+
+            master = ac.createGain();
+            master.gain.value = 0.3;
+
+            const comp = ac.createDynamicsCompressor();
+            comp.threshold.value = -16;
+            comp.knee.value      = 12;
+            comp.ratio.value     = 4;
+            comp.attack.value    = 0.004;
+            comp.release.value   = 0.25;
+
+            const len = Math.floor(ac.sampleRate * 2.0);
+            const ir  = ac.createBuffer(2, len, ac.sampleRate);
+            for(let ch = 0; ch < 2; ch++){
+                const d = ir.getChannelData(ch);
+                for(let i = 0; i < len; i++)
+                    d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 3);
+            }
+            const reverb = ac.createConvolver();
+            reverb.buffer = ir;
+            wet = ac.createGain(); wet.gain.value = 0.2;
+            dry = ac.createGain(); dry.gain.value = 0.85;
+
+            reverb.connect(wet).connect(master);
+            dry.connect(master);
+            master.connect(comp).connect(ac.destination);
         }
 
-        // ---------- 斐波那契球点云（预算好三角函数相关量） ----------
-        const N  = 1000;
-        const GA = Math.PI * (1 + Math.sqrt(5));
-        const pts = new Array(N);
+        function getWave(){
+            if(wave) return wave;
+            const N = 9;
+            const real = new Float32Array(N), imag = new Float32Array(N);
+            const h = [0,1,0.55,0.32,0.2,0.12,0.08,0.05,0.03];
+            for(let i = 1; i < N; i++) imag[i] = h[i];
+            wave = ac.createPeriodicWave(real, imag);
+            return wave;
+        }
 
-        for (let i = 0; i < N; i++) {
-            const y  = 1 - ((i + 0.5) / N) * 2;
-            const r  = Math.sqrt(1 - y * y);
-            const th = GA * i;
-            pts[i] = {
-                x:  Math.cos(th) * r,
-                y:  y,
-                z:  Math.sin(th) * r,
-                a1: th * 3,                 // 呼吸相位
-                a2: (th * 57.2958) % 360    // 色相偏移
+        function piano(t, m, d){
+            if(m === 0) return;
+            const f = 440 * Math.pow(2, (m-69)/12);
+
+            const out = ac.createGain();
+            const pan = ac.createStereoPanner();
+            pan.pan.value = Math.max(-0.4, Math.min(0.4, (m-68)/24));
+
+            const o1 = ac.createOscillator();
+            o1.setPeriodicWave(getWave());
+            o1.frequency.value = f;
+
+            const o2 = ac.createOscillator();
+            o2.type = 'sine';
+            o2.frequency.value = f * 2.003;
+            const g2 = ac.createGain();
+            g2.gain.value = 0.1;
+
+            o1.connect(out);
+            o2.connect(g2).connect(out);
+            out.connect(pan);
+            pan.connect(dry);
+            pan.connect(wet);
+
+            const decay      = Math.max(0.5, Math.min(3.0, 1.6 * Math.pow(2, (69-m)/24)));
+            const holdEnd    = t + Math.max(d, 0.08);
+            const releaseEnd = holdEnd + decay;
+
+            const g = out.gain;
+            g.setValueAtTime(0, t);
+            g.linearRampToValueAtTime(0.85, t + 0.006);
+            g.exponentialRampToValueAtTime(0.08, holdEnd);
+            g.exponentialRampToValueAtTime(0.0001, releaseEnd);
+
+            o1.start(t); o2.start(t);
+            o1.stop(releaseEnd + 0.05);
+            o2.stop(releaseEnd + 0.05);
+
+            o1.onended = () => {
+                try { pan.disconnect(); out.disconnect(); g2.disconnect(); } catch(e){}
             };
         }
 
-        // ---------- 颜色查找表：色相 × 亮度，避免每帧拼字符串 ----------
-        const HUE_N = 18, LIT_N = 6;
-        const HUE_D = 360 / HUE_N, LIT_D = 1 / (LIT_N - 1);
-        const COLORS = new Array(HUE_N);
-        for (let h = 0; h < HUE_N; h++) {
-            const hue = h * HUE_D;
-            const row = new Array(LIT_N);
-            for (let l = 0; l < LIT_N; l++) {
-                row[l] = 'hsl(' + (hue | 0) + ',100%,' + ((42 + l * LIT_D * 28) | 0) + '%)';
-            }
-            COLORS[h] = row;
+        // —— 进度 ——
+        function frame(){
+            const p = Math.max(0, Math.min(1, (ac.currentTime - t0) / TOTAL));
+            fill.style.width = (p*100) + '%';
+            cur.textContent  = fmt(p * TOTAL);
+            if(playing) rafId = requestAnimationFrame(frame);
         }
 
-        // ---------- 交互 ----------
-        let mx = 0, my = 0, px = 0, py = 0;
-        const ripples = [];
-
-        window.addEventListener('pointermove', e => {
-            mx = (e.clientX / (VW || 1)) * 2 - 1;
-            my = (e.clientY / (VH || 1)) * 2 - 1;
-        }, { passive: true });
-
-        window.addEventListener('pointerdown', e => {
-            ripples.push({ x: e.clientX, y: e.clientY, r: 0, a: 1, hue: (Math.random() * 360) | 0 });
-        }, { passive: true });
-
-        // ---------- 主循环 ----------
-        let t = 0;
-        const TAU = 6.28318530718;
-
-        function frame() {
-            requestAnimationFrame(frame);
-
-            t  += 0.006;
-            px += (mx - px) * 0.045;
-            py += (my - py) * 0.045;
-
-            // 残影
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = 'rgba(0,0,0,0.17)';
-            ctx.fillRect(0, 0, VW, VH);
-
-            ctx.globalCompositeOperation = 'lighter';
-
-            const ay  = t * 0.55 + px * 1.15;
-            const ax  = Math.sin(t * 0.4) * 0.5 + py * 0.95;
-            const cAy = Math.cos(ay), sAy = Math.sin(ay);
-            const cAx = Math.cos(ax), sAx = Math.sin(ax);
-
-            const R      = Math.min(VW, VH) * 0.36;
-            const cxs    = VW * 0.5;
-            const cys    = VH * 0.5;
-            const FOV    = 3.0;
-            const baseHue = (t * 60) % 360;
-            const invHueD = 1 / HUE_D;
-
-            let lastStyle = null;
-
-            for (let i = 0; i < N; i++) {
-                const p = pts[i];
-
-                // 呼吸起伏（单次三角函数）
-                const w = 1 + 0.10 * Math.sin(p.a1 + t * 3.0);
-                const x = p.x * w, y = p.y * w, z = p.z * w;
-
-                // 绕 Y 轴
-                const x1 = x * cAy - z * sAy;
-                const z1 = x * sAy + z * cAy;
-                // 绕 X 轴
-                const y1 = y * cAx - z1 * sAx;
-                const z2 = y * sAx + z1 * cAx;
-
-                // 透视
-                const k  = FOV / (FOV + z2);
-                const sx = cxs + x1 * R * k * 1.4;
-                const sy = cys + y1 * R * k * 1.4;
-
-                const size = k * k * 2.0;
-                const s = size < 0.6 ? 0.6 : (size > 3.2 ? 3.2 : size);
-
-                // 颜色查表
-                let hi = ((baseHue + p.a2) % 360) * invHueD | 0;
-                if (hi < 0) hi += HUE_N;
-                else if (hi >= HUE_N) hi -= HUE_N;
-
-                let li = ((z2 * 0.5 + 0.5) * (LIT_N - 1) + 0.5) | 0;
-                if (li < 0) li = 0;
-                else if (li >= LIT_N) li = LIT_N - 1;
-
-                const style = COLORS[hi][li];
-                if (style !== lastStyle) { ctx.fillStyle = style; lastStyle = style; }
-
-                ctx.globalAlpha = k * k * 0.62 + 0.08;
-                ctx.fillRect(sx, sy, s, s);
-            }
-
-            // 点击涟漪
-            ctx.globalAlpha = 1;
-            ctx.lineWidth = 2;
-            for (let i = ripples.length - 1; i >= 0; i--) {
-                const r = ripples[i];
-                r.r += 7.5;
-                r.a *= 0.945;
-                if (r.a < 0.02) { ripples.splice(i, 1); continue; }
-                ctx.beginPath();
-                ctx.arc(r.x, r.y, r.r, 0, TAU);
-                ctx.strokeStyle = 'hsla(' + r.hue + ',100%,62%,' + r.a.toFixed(3) + ')';
-                ctx.stroke();
-            }
+        function reset(){
+            playing = false;
+            cancelAnimationFrame(rafId);
+            btn.disabled = false;
+            lbl.textContent = '播放';
+            cur.textContent = '0:00';
+            fill.style.width = '0%';
         }
 
-        window.addEventListener('resize', resize);
-        resize();
-        requestAnimationFrame(frame);
-    })();
+        btn.onclick = async () => {
+            if(playing) return;
+            playing = true;
+            btn.disabled = true;
+            lbl.textContent = '演奏中';
+
+            buildGraph();
+            if(ac.state === 'suspended') await ac.resume();
+
+            t0 = ac.currentTime + 0.08;
+            let c = t0;
+            for(const [m,d] of S){
+                piano(c, m, BEAT*d);
+                c += BEAT*d;
+            }
+
+            cancelAnimationFrame(rafId);
+            frame();
+            setTimeout(reset, (c - ac.currentTime)*1000 + 600);
+        };
+    }();
 </script>
 </body>
 </html>
